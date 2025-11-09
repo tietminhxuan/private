@@ -2,6 +2,18 @@
   ob_start();
   session_start();
   require("config.php");
+
+  // Tìm kiếm
+    $keyword = "";
+    if(isset($_GET['keyword'])) {
+        $keyword = trim($_GET['keyword']);
+        $sql = "SELECT * FROM tailieu WHERE tentailieu LIKE '%$keyword%' OR motatailieu LIKE '%$keyword%' ORDER BY matailieu DESC";
+    } else {
+        $sql = "SELECT * FROM tailieu ORDER BY matailieu DESC";
+    }
+
+    $result = mysqli_query($conn, $sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -109,9 +121,10 @@
   margin-left: 5px;
 }
 </style>
-        <a><form class="search-form" action="/search" method="get" role="search" aria-label="Form tìm kiếm">
+        <a><form class="search-form" action="index.php" method="get" role="search" aria-label="Form tìm kiếm">
     <li><label for="q" class="search-label">Tìm kiếm</label></li>
-    <input id="q" class="search-input" name="q" type="search" placeholder="Nhập từ khóa..." aria-label="Từ khóa tìm kiếm" />
+    <input type="text" name="keyword" class="form-control"   placeholder="Nhập từ khóa..." 
+    value="<?php echo htmlspecialchars($keyword); ?>" style="width:300px;">
     <button class="search-btn" type="submit">Tìm</button></li></a>
   </ul>
   </form>

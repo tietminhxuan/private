@@ -10,6 +10,58 @@
 <div class="container">
   <div class="admin-header">
     <h2><i class="fa-solid fa-gear"></i> TRANG QUẢN TRỊ</h2>
+    <!-- Tab Thống kê -->
+  <h3 class="text-center mb-4">📊 Thống kê số liệu</h3>
+
+  <?php
+  // Kết nối database
+  include("config.php");
+
+  // 1️⃣ Tổng số người dùng
+  $sql_users = "SELECT COUNT(*) AS total_users FROM nguoidung";
+  $res_users = $conn->query($sql_users);
+  $row_users = $res_users->fetch_assoc();
+  $total_users = $row_users['total_users'];
+
+  // 2️⃣ Tổng số tài liệu đã tải lên
+  $sql_docs = "SELECT COUNT(*) AS total_docs FROM tailieu";
+  $res_docs = $conn->query($sql_docs);
+  $row_docs = $res_docs->fetch_assoc();
+  $total_docs = $row_docs['total_docs'];
+
+  // 3️⃣ Giả sử có bảng `luotxem` hoặc cột `view_count` trong `tailieu`
+  // Nếu có cột view_count thì ta dùng như sau:
+  $sql_views = "SELECT SUM(view) AS total_views FROM tailieu";
+  $res_views = $conn->query($sql_views);
+  $row_views = $res_views->fetch_assoc();
+  $total_views = $row_views['total_views'] ?? 0;
+
+  // Tính tỷ lệ % click = (tổng lượt xem / tổng tài liệu)
+  $click_rate = ($total_docs > 0) ? round(($total_views / $total_docs), 2) : 0;
+  ?>
+
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3">
+        <h5>👤 Người dùng đã đăng ký</h5>
+        <h2 class="text-primary"><?php echo $total_users; ?></h2>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3">
+        <h5>📚 Tổng số tài liệu đã tải lên</h5>
+        <h2 class="text-success"><?php echo $total_docs; ?></h2>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3">
+        <h5>📈 Tỷ lệ % click vào bài đăng</h5>
+        <h2 class="text-warning"><?php echo $click_rate; ?>%</h2>
+      </div>
+    </div>
+  </div>
   </div>
 
   <!-- Tabs -->
@@ -19,6 +71,7 @@
   </ul>
 
   <div class="tab-content" style="margin-top:20px;">
+    
     <!-- Tab Quản lý người dùng -->
     <div id="users" class="tab-pane fade in active">
       <h3><i class="fa-solid fa-user-gear"></i> Danh sách người dùng</h3>
@@ -93,6 +146,7 @@ while($row = mysqli_fetch_assoc($result)){
     </div>
   </div>
 </div>
+
 
 </body>
 </html>
