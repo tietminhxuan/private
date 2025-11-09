@@ -1,5 +1,10 @@
 <?php
 require("phandau.php");
+// Kiểm tra nếu chưa đăng nhập thì chuyển hướng
+    if(!isset($_SESSION['username'])) {
+        header("Location: dangnhap.php");
+        exit();
+    }
 ?>
 
 <head>
